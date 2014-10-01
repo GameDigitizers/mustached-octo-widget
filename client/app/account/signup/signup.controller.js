@@ -4,6 +4,7 @@ angular.module('7wondersApp')
   .controller('SignupCtrl', function ($scope, Auth, $location, $window) {
     $scope.user = {};
     $scope.errors = {};
+    $scope.placeholders = {};
 
     $scope.register = function(form) {
       $scope.submitted = true;
@@ -28,6 +29,9 @@ angular.module('7wondersApp')
             $scope.errors[field] = error.message;
           });
         });
+      } else {
+        console.log('test');
+        console.log(form.name);
       }
     };
 
