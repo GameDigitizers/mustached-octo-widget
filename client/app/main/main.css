@@ -28,3 +28,11 @@
     margin-top: 70px;
     border-top: 1px solid #E5E5E5;
 }
+
+.help-inverse {
+    color: #F5F5F5;
+}
+
+#banner .form-control-feedback {
+    top: 0;
+}
