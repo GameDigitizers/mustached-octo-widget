@@ -12,6 +12,6 @@ router.put('/:id', controller.update);
 router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
 
-router.post('/new/:id', controller.join);
+router.post('/new/:name', controller.join);
 
 module.exports = router;
