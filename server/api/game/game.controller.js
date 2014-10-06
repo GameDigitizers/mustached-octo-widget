@@ -28,6 +28,20 @@ exports.create = function(req, res) {
   });
 };
 
+// Creates a new game in the DB.
+exports.join = function(req, res) {
+  Game.findById(req.params.id, function (err, game) {
+    if(err) { return handleError(res, err); }
+    if(!game) { return res.send(404); }
+    return res.json(game);
+  });
+  
+  // Game.create(req.body, function(err, game) {
+  //   if(err) { return handleError(res, err); }
+  //   return res.json(201, game);
+  // });
+};
+
 // Updates an existing game in the DB.
 exports.update = function(req, res) {
   if(req.body._id) { delete req.body._id; }
