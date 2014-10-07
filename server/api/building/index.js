@@ -7,9 +7,12 @@ var router = express.Router();
 
 router.get('/', controller.index);
 router.get('/:id', controller.show);
-router.post('/', controller.create);
-router.put('/:id', controller.update);
-router.patch('/:id', controller.update);
-router.delete('/:id', controller.destroy);
+
+// Not needed since this data should be static
+
+// router.post('/', controller.create);
+// router.put('/:id', controller.update);
+// router.patch('/:id', controller.update);
+// router.delete('/:id', controller.destroy);
 
 module.exports = router;
