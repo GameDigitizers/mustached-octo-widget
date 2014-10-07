@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
   util = require('util'),
   Schema = mongoose.Schema,
   UserSchema = require('../user/user.model.js'),
-  BuildingSchema = require('../building/building.model.js')
+  BuildingSchema = require('../building/building.model.js');
 
 // var BuildingSchema = new Schema({
 //   name: String,
