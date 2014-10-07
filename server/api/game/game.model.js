@@ -1,36 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-  util = require('util'),
-  Schema = mongoose.Schema,
-  UserSchema = require('../user/user.model.js'),
-  BuildingSchema = require('../building/building.model.js');
-
-// var BuildingSchema = new Schema({
-//   name: String,
-//   type: {
-//     type: String, 
-//     enum: [
-//     'Raw Materials',
-//     'Manufactured Goods',
-//     'Military',
-//     'Civilian',
-//     'Scientific',
-//     'Commercial',
-//     'Guild'
-//     ]
-//   },
-//   builds: {
-//     type: Schema.ObjectId,
-//     ref: 'BuildingSchema',
-//   },
-//   built_by: {
-//     type: Schema.ObjectId,
-//     ref: 'BuildingSchema'
-//   },
-//   cost: Object,
-//   grants: Object
-// });
+  Schema = mongoose.Schema;
 
 var GameSchema = new Schema({
   name: String,
