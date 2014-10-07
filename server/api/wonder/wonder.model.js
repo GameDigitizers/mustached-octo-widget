@@ -5,8 +5,11 @@ var mongoose = require('mongoose'),
 
 var WonderSchema = new Schema({
   name: String,
-  info: String,
-  active: Boolean
+  resource: {
+    type: Schema.ObjectId,
+    ref: 'CardSchema',
+  },
+  stages: [Object]
 });
 
 module.exports = mongoose.model('Wonder', WonderSchema);

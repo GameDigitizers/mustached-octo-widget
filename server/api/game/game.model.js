@@ -6,15 +6,6 @@ var mongoose = require('mongoose'),
   UserSchema = require('../user/user.model.js'),
   BuildingSchema = require('../building/building.model.js')
 
-var WonderSchema = new Schema({
-  name: String,
-  resource: {
-    type: Schema.ObjectId,
-    ref: 'CardSchema',
-  },
-  stages: [Object]
-});
-
 // var BuildingSchema = new Schema({
 //   name: String,
 //   type: {
