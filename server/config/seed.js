@@ -7,6 +7,7 @@
 
 var Thing = require('../api/thing/thing.model');
 var User = require('../api/user/user.model');
+var Game = require('../api/game/game.model');
 
 Thing.find({}).remove(function() {
   Thing.create({
@@ -44,6 +45,21 @@ User.find({}).remove(function() {
     password: 'admin'
   }, function() {
       console.log('finished populating users');
+    }
+  );
+});
+
+Game.find({}).remove(function() {
+  Game.create({
+    name: 'septo-gorilla',
+    info: '',
+    active: true
+  }, {
+    name: 'septo-temple',
+    info: '',
+    active: false
+  }, function() {
+      console.log('finished populating games');
     }
   );
 });

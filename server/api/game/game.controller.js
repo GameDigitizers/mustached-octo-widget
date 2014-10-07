@@ -30,16 +30,21 @@ exports.create = function(req, res) {
 
 // Creates a new game in the DB.
 exports.join = function(req, res) {
-  Game.findById(req.params.id, function (err, game) {
+  Game.find({'name': req.params.name}, function (err, game) {
     if(err) { return handleError(res, err); }
-    if(!game) { return res.send(404); }
-    return res.json(game);
+    if (game.length == 0) { 
+      Game.create({
+        name: req.params.name,
+        info: "created",
+        active: false,
+      }, function(err, game) {
+        if(err) { return handleError(res, err); }
+        return res.json(201, game);
+      });
+    } else {
+      return res.json(game);
+    }
   });
-  
-  // Game.create(req.body, function(err, game) {
-  //   if(err) { return handleError(res, err); }
-  //   return res.json(201, game);
-  // });
 };
 
 // Updates an existing game in the DB.
