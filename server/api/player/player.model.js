@@ -4,9 +4,27 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var PlayerSchema = new Schema({
-  name: String,
-  info: String,
-  active: Boolean
+  user: {
+    type: Schema.ObjectId,
+    ref: 'UserSchema'
+  },
+  money: Number,
+  military: {
+    'wins': [Number],
+    'loses': Number
+  },
+  hand: [{
+    type: Schema.ObjectId,
+    ref: 'BuildingSchema'
+  }],
+  wonder: {
+    type: Schema.ObjectId,
+    ref: 'WonderSchema'
+  },
+  buildings: [{
+    type: Schema.ObjectId,
+    ref: 'BuildingSchema'
+  }]
 });
 
 module.exports = mongoose.model('Player', PlayerSchema);
