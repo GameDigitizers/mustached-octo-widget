@@ -35,7 +35,6 @@ exports.join = function(req, res) {
     if (game.length == 0) { 
       Game.create({
         name: req.params.name,
-        info: "created",
         active: false,
       }, function(err, game) {
         if(err) { return handleError(res, err); }
