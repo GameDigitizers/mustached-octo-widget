@@ -30,20 +30,17 @@ exports.create = function(req, res) {
 
 // Creates a new game in the DB.
 exports.join = function(req, res) {
-  console.log("Making game with name: " + req.params.name);
   Game.find({'name': req.params.name}, function (err, game) {
     if(err) { return handleError(res, err); }
-    console.log("GAME on next line");
-    console.log(game);
     if (game.length == 0) { 
-      console.log("creating game!");
-      Game.create(req.body, function(err, game) {
+      Game.create({
+        name: req.params.name,
+        active: false,
+      }, function(err, game) {
         if(err) { return handleError(res, err); }
-        console.log("Responding with 201");
         return res.json(201, game);
       });
     } else {
-      console.log("Responding with 200");
       return res.json(game);
     }
   });
