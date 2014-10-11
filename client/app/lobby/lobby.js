@@ -6,6 +6,8 @@ angular.module('7wondersApp')
       .state('lobby', {
         url: '/lobby',
         templateUrl: 'app/lobby/lobby.html',
-        controller: 'LobbyCtrl'
+        controller: 'LobbyCtrl',
+        authenticate: true
       });
   });
+  
