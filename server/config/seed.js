@@ -9,6 +9,7 @@ var Thing = require('../api/thing/thing.model');
 var User = require('../api/user/user.model');
 var Game = require('../api/game/game.model');
 var Building = require('../api/building/building.model');
+var Wonder = require('../api/wonder/wonder.model');
 
 Thing.find({}).remove(function() {
     Thing.create({
@@ -65,8 +66,28 @@ Game.find({}).remove(function() {
 
 Building.find({}).remove(function() {
     Building.create({
-      name: 'septo-Walls'
+        name: 'septo-Walls'
     }, function () {
-      console.log("finished populating buildings");
+        console.log("finished populating buildings");
+    });
+});
+
+Wonder.find({}).remove(function() {
+    Wonder.create({
+        name: 'Giza'
+    }, {
+        name: 'Rhodos'
+    }, {
+        name: 'Ephesus'
+    }, {
+        name: 'Babylon'
+    }, {
+        name: 'Alexandria'
+    }, {
+        name: 'Olympia'
+    }, {
+        name: 'Halicarnassus'
+    }, function () {
+        console.log("finished populating wonders")
     });
 });

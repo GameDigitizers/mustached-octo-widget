@@ -1,14 +1,16 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    UserSchema = require('../user/user.model.js'),
-    BuildingSchema = require('../building/building.model.js')
+    Schema = mongoose.Schema;
 
 var PlayerSchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: 'UserSchema'
+  },
+  joined: {
+    type: Boolean,
+    default: false,
   },
   money: Number,
   military: {

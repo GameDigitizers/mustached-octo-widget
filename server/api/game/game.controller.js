@@ -2,6 +2,8 @@
 
 var _ = require('lodash');
 var Game = require('./game.model');
+var User = require('../user/user.model');
+var Player = require('../player/player.model');
 
 // Get list of games
 exports.index = function(req, res) {
@@ -30,20 +32,44 @@ exports.create = function(req, res) {
 
 // Creates a new game in the DB.
 exports.join = function(req, res) {
-  Game.find({'name': req.params.name}, function (err, game) {
-    if(err) { return handleError(res, err); }
-    if (game.length == 0) { 
-      Game.create({
-        name: req.params.name,
-        active: false,
-      }, function(err, game) {
-        if(err) { return handleError(res, err); }
-        return res.json(201, game);
-      });
-    } else {
-      return res.json(game);
-    }
-  });
+  console.log(req.user);
+  console.log(Object.keys(req));
+  console.log(req._passport);
+
+  // Game.find({'name': req.params.name}, function (err, game) {
+  //   if(err) { return handleError(res, err); }
+  //   if (game.length == 0) { 
+  //     var players = [];
+  //     var currUser = req.user.id;
+
+  //     User.find({}, '-salt -hashedPassword', function (err, users) {
+  //       if(err) return res.send(500, err);
+
+  //       users.forEach(function (user) {
+  //         var joined = false;
+          
+  //         if (currUser.id == user.id) {
+  //           joined = true;
+  //         }
+
+  //         players.push(
+  //           Player.create({
+  //             user: user.id,
+  //             joined: joined
+  //           })
+  //         );
+  //       });
+
+  //       Game.create({
+  //         name: req.params.name,
+  //         active: false,
+  //         players: players
+  //       });
+  //     });
+  //   } else {
+  //     return res.json(game);
+  //   }
+  // });
 };
 
 // Updates an existing game in the DB.
