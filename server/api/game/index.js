@@ -2,6 +2,7 @@
 
 var express = require('express');
 var controller = require('./game.controller');
+var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 
@@ -12,6 +13,6 @@ router.put('/:id', controller.update);
 router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
 
-router.post('/new/:name', controller.join);
+router.post('/new/:name', auth.isAuthenticated(), controller.join);
 
 module.exports = router;

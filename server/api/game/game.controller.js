@@ -33,8 +33,6 @@ exports.create = function(req, res) {
 // Creates a new game in the DB.
 exports.join = function(req, res) {
   console.log(req.user);
-  console.log(Object.keys(req));
-  console.log(req._passport);
 
   // Game.find({'name': req.params.name}, function (err, game) {
   //   if(err) { return handleError(res, err); }
