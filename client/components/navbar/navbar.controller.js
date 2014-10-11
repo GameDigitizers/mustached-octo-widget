@@ -4,7 +4,10 @@ angular.module('7wondersApp')
   .controller('NavbarCtrl', function ($scope, $location, Auth) {
     $scope.menu = [{
       'title': 'Home',
-      'link': '/'
+      'link': '/',
+    }, {
+      'title': 'Lobby',
+      'link': '/lobby'
     }];
 
     $scope.isCollapsed = true;
