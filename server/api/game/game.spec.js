@@ -11,14 +11,15 @@ var superagent = require('superagent');
 var agent = superagent.agent();
 
 var theAccount = {
-  "email": "test@test.com",
-  "password": "test"
+  email: "nathan@test.com",
+  password: "password"
 };
 
 function login(request, done) {
   request
     .post('/auth/local')
     .send(theAccount)
+    .expect(200)
     .end(function (err, res) {
       if (err) {
         throw err;
@@ -33,7 +34,7 @@ var game;
 var nathan = new User({
     provider: 'local',
     name: 'Fake User',
-    email: 'test@test.com',
+    email: 'nathan@test.com',
     password: 'password'
 });
 
@@ -103,11 +104,15 @@ describe('POST /api/games/new/:name', function() {
       players: [nathan.id, bert.id, steve.id]
     });
 
-    Game.remove().exec();
+    Game.remove().exec().then(function () {
+      User.remove().exec().then(function() {
+        nathan.save();
 
-    login(request(app), function (loginAgent) {
-      agent = loginAgent;
-      done();
+        login(request(app), function (loginAgent) {
+          agent = loginAgent;
+          done();
+        });
+      });
     });
   });
 
