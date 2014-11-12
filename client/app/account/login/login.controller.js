@@ -15,7 +15,7 @@ angular.module('7wondersApp')
         })
         .then( function() {
           // Logged in, redirect to home
-          $location.path('/');
+          $location.path($location.$$search.dest).search('');
         })
         .catch( function(err) {
           $scope.errors.other = err.message;

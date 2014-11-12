@@ -87,6 +87,7 @@ describe('POST /api/games/new/:name', function() {
   });
 
   it('should respond with a 201 with game if name does not exist yet', function(done) {
+    nathan.authenticate('password');
     request(app)
       .post('/api/games/new/octo-gamer')
       .expect(201)
