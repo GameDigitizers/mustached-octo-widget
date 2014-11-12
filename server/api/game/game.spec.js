@@ -5,29 +5,11 @@ var should = require('should'),
     request = require('supertest'),
     mongoose = require('mongoose'),
     Game = mongoose.model('Game'),
-    User = mongoose.model('User');
-var superagent = require('superagent');
-
+    User = mongoose.model('User'),
+    login = require('../../helpers/loginHelper.spec'),
+    superagent = require('superagent');
+  
 var agent = superagent.agent();
-
-var theAccount = {
-  email: "nathan@test.com",
-  password: "password"
-};
-
-function login(request, done) {
-  request
-    .post('/auth/local')
-    .send(theAccount)
-    .expect(200)
-    .end(function (err, res) {
-      if (err) {
-        throw err;
-      }
-      agent.saveCookies(res);
-      done(agent);
-    });
-};
 
 
 var game;
@@ -93,6 +75,7 @@ describe('GET /api/games', function() {
   });
 });
 
+
 describe('POST /api/games/new/:name', function() {
 
   before(function (done) {
@@ -106,34 +89,35 @@ describe('POST /api/games/new/:name', function() {
 
     Game.remove().exec().then(function () {
       User.remove().exec().then(function() {
-        nathan.save();
-
-        login(request(app), function (loginAgent) {
-          agent = loginAgent;
+        nathan.save(function () {
           done();
         });
       });
     });
   });
 
-  it ('should be able to get to lobby', function (done) {
-    var req = request(app).get('/lobby');
-    agent.attachCookies(req);
-    req.expect(200, done);
-  });
+  it ('should respond with a 201 with game if name does not exist yet', function(done) {
+    login.login(request(app), function (loginAgent) {
+      agent = loginAgent;
+      var req = request(app).post('/api/games/new/octo-gamer');
 
-  it.skip ('should respond with a 201 with game if name does not exist yet', function(done) {
+      agent.attachCookies(req);
+
+      console.log("AUTH TOKEN: " + login.auth_token);
+      req
+        .set("Authorization", login.auth_token)
+        .expect(201)
+        .expect('Content-Type', /json/)
+        .end(function(err, res) {
+          console.log(err);
+          console.log(res);
+          if (err) return done(err);
+          res.body.should.be.instanceof(Object);
+
+          done();
+        });
+    });
     
-    request(app)
-      .post('/api/games/new/octo-gamer')
-      .expect(201)
-      .expect('Content-Type', /json/)
-      .end(function(err, res) {
-        if (err) return done(err);
-        res.body.should.be.instanceof(Object);
-
-        done();
-      });
   });
 
   it.skip('should respond with a 200 if the game exists', function (done) {

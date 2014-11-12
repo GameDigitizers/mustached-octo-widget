@@ -3,6 +3,11 @@
 var should = require('should');
 var app = require('../../app');
 var User = require('./user.model');
+var login = require('../../helpers/loginHelper.spec');
+var superagent = require('superagent');
+
+
+var agent = superagent.agent();
 
 var user = new User({
   provider: 'local',
@@ -56,5 +61,25 @@ describe('User Model', function() {
 
   it("should not authenticate user if password is invalid", function() {
     return user.authenticate('blah').should.not.be.true;
+  });
+});
+
+
+describe.skip ('Login tester dude', function() {
+  before(function (done) {
+    User.remove().exec().then(function() {
+      login.nathan.save();
+
+      login.login(request(app), function (loginAgent) {
+        agent = loginAgent;
+        done();
+      });
+    });
+  });
+
+  it ('should be able to get to lobby', function (done) {
+    var req = request(app).get('/lobby');
+    agent.attachCookies(req);
+    req.expect(200, done);
   });
 });

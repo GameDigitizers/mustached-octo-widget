@@ -34,40 +34,40 @@ exports.create = function(req, res) {
 exports.join = function(req, res) {
   console.log(req.user);
 
-  // Game.find({'name': req.params.name}, function (err, game) {
-  //   if(err) { return handleError(res, err); }
-  //   if (game.length == 0) { 
-  //     var players = [];
-  //     var currUser = req.user.id;
+  Game.find({'name': req.params.name}, function (err, game) {
+    if(err) { return handleError(res, err); }
+    if (game.length == 0) { 
+      var players = [];
+      var currUser = req.user.id;
 
-  //     User.find({}, '-salt -hashedPassword', function (err, users) {
-  //       if(err) return res.send(500, err);
+      User.find({}, '-salt -hashedPassword', function (err, users) {
+        if(err) return res.send(500, err);
 
-  //       users.forEach(function (user) {
-  //         var joined = false;
+        users.forEach(function (user) {
+          var joined = false;
           
-  //         if (currUser.id == user.id) {
-  //           joined = true;
-  //         }
+          if (currUser.id == user.id) {
+            joined = true;
+          }
 
-  //         players.push(
-  //           Player.create({
-  //             user: user.id,
-  //             joined: joined
-  //           })
-  //         );
-  //       });
+          players.push(
+            Player.create({
+              user: user.id,
+              joined: joined
+            })
+          );
+        });
 
-  //       Game.create({
-  //         name: req.params.name,
-  //         active: false,
-  //         players: players
-  //       });
-  //     });
-  //   } else {
-  //     return res.json(game);
-  //   }
-  // });
+        Game.create({
+          name: req.params.name,
+          active: false,
+          players: players
+        });
+      });
+    } else {
+      return res.json(game);
+    }
+  });
 };
 
 // Updates an existing game in the DB.
