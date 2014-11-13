@@ -2,34 +2,59 @@ var superagent = require('superagent');
 var agent = superagent.agent();
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
+var request = require('supertest');
 
-exports.nathan = new User({
-    provider: 'local',
-    name: 'Fake User',
-    email: 'nathan@test.com',
-    password: 'password'
-});
+function Agent(user) {
+  superagent.agent.call(this);
+  this.model = user;
+  this.credentials = {
+    email: user.email,
+    password: user.password
+  };
+  this.auth_token = "";
+}
 
-exports.auth_token = "";
+Agent.prototype = Object.create(superagent.agent.prototype);
 
-var theAccount = {
-  email: "nathan@test.com",
-  password: "password"
+Agent.prototype.saveAuthToken = function(res) {
+  if (res.body.token) {
+    this.auth_token = 'Bearer ' + res.body.token;
+  } else {
+    throw ('No Authorization Token!');
+  }
 };
 
-exports.login = function (request, done) {
+Agent.prototype.attachAuthToken = function(req) {
+  req.set("Authorization", this.auth_token);
+};
+
+Agent.prototype.login = function (request, done) {
   request
     .post('/auth/local')
-    .send(theAccount)
+    .send(this.credentials)
     .expect(200)
     .end(function (err, res) {
       if (err) {
         throw err;
       }
-      agent.saveCookies(res);
+      this.saveCookies(res);
+      this.saveAuthToken(res);
 
-      console.log(res.body.token);
-      exports.auth_token = 'Bearer ' + res.body.token;
-      done(agent);
-    });
+      done();
+    }.bind(this));
+  };
+
+Agent.prototype.post = function(request, url) {
+  var req = request.post(url);
+
+  this.attachCookies(req);
+  this.attachAuthToken(req);
+
+  return req;
 };
+
+exports.Agent = Agent;
+
+
+
+

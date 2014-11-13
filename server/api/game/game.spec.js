@@ -6,33 +6,36 @@ var should = require('should'),
     mongoose = require('mongoose'),
     Game = mongoose.model('Game'),
     User = mongoose.model('User'),
-    login = require('../../helpers/loginHelper.spec'),
-    superagent = require('superagent');
-  
-var agent = superagent.agent();
-
+    login = require('../../helpers/loginHelper.spec');
 
 var game;
-var nathan = new User({
+
+var nathan = new login.Agent(
+  new User({
     provider: 'local',
     name: 'Fake User',
     email: 'nathan@test.com',
     password: 'password'
-});
+  })
+);
 
-var bert = new User({
+var bert = new login.Agent(
+  new User({
     provider: 'local',
     name: 'Fake User',
-    email: 'test@test.com',
+    email: 'bert@test.com',
     password: 'password'
-});
+  })
+);
 
-var steve = new User({
+var steve = new login.Agent(
+  new User({
     provider: 'local',
     name: 'Fake User',
-    email: 'test@test.com',
+    email: 'steve@test.com',
     password: 'password'
-});
+  })
+);
 
 describe('Game Model', function () {
   beforeEach(function () {
@@ -51,7 +54,7 @@ describe('Game Model', function () {
   });
 
   it ('should not save with less than 2 players', function (done) {
-    game.players = [nathan.id];
+    game.players = [nathan.model.id];
     game.save(function (err) {
       should.exist(err);
       done()
@@ -84,12 +87,12 @@ describe('POST /api/games/new/:name', function() {
     game = new Game({
       name: 'septo-fusilli',
       active: true,
-      players: [nathan.id, bert.id, steve.id]
+      players: [nathan.model.id, bert.model.id, steve.model.id]
     });
 
     Game.remove().exec().then(function () {
       User.remove().exec().then(function() {
-        nathan.save(function () {
+        nathan.model.save(function () {
           done();
         });
       });
@@ -97,20 +100,14 @@ describe('POST /api/games/new/:name', function() {
   });
 
   it ('should respond with a 201 with game if name does not exist yet', function(done) {
-    login.login(request(app), function (loginAgent) {
-      agent = loginAgent;
-      var req = request(app).post('/api/games/new/octo-gamer');
-
-      agent.attachCookies(req);
-
-      console.log("AUTH TOKEN: " + login.auth_token);
-      req
-        .set("Authorization", login.auth_token)
+    nathan.login(request(app), function () {
+      nathan
+        .post(request(app), '/api/games/new/octo-gamer')
         .expect(201)
         .expect('Content-Type', /json/)
         .end(function(err, res) {
-          console.log(err);
-          console.log(res);
+          // console.log(err);
+          // console.log(res);
           if (err) return done(err);
           res.body.should.be.instanceof(Object);
 
