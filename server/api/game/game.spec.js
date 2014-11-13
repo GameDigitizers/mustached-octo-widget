@@ -91,11 +91,7 @@ describe('POST /api/games/new/:name', function() {
     });
 
     Game.remove().exec().then(function () {
-      User.remove().exec().then(function() {
-        nathan.model.save(function () {
-          done();
-        });
-      });
+      done();
     });
   });
 
@@ -106,26 +102,25 @@ describe('POST /api/games/new/:name', function() {
         .expect(201)
         .expect('Content-Type', /json/)
         .end(function(err, res) {
-          // console.log(err);
-          // console.log(res);
           if (err) return done(err);
           res.body.should.be.instanceof(Object);
-
           done();
         });
     });
     
   });
 
-  it.skip('should respond with a 200 if the game exists', function (done) {
-    request(app)
-      .post('/api/games/new/octo-gamer')
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end(function(err, res) {
-        if (err) return done(err);
-        res.body.should.be.instanceof(Object);
-        done();
-      });
+  it ('should respond with a 200 if the game exists', function (done) {
+    bert.login(request(app), function() {
+      bert
+        .post(request(app), '/api/games/new/octo-gamer')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function(err, res) {
+          if (err) return done(err);
+          res.body.should.be.instanceof(Object);
+          done();
+        });
+    });
   });
 });
