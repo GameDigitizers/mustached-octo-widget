@@ -32,7 +32,7 @@ exports.create = function(req, res) {
 
 // Creates a new game in the DB.
 exports.join = function(req, res) {
-  console.log(req.user);
+  // console.log(req.user);
 
   Game.find({'name': req.params.name}, function (err, game) {
     if(err) { return handleError(res, err); }
@@ -63,9 +63,11 @@ exports.join = function(req, res) {
           active: false,
           players: players
         });
+
+        return res.json(201, game);
       });
     } else {
-      return res.json(game);
+      return res.json(200, game);
     }
   });
 };
