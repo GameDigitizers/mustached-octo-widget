@@ -99,6 +99,7 @@ describe('POST /api/games/new/:name', function() {
     nathan.login(request(app), function () {
       nathan
         .post(request(app), '/api/games/new/octo-gamer')
+        .send({ players: [nathan.model.email, bert.model.email, steve.model.email] })
         .expect(201)
         .expect('Content-Type', /json/)
         .end(function(err, res) {
@@ -107,7 +108,6 @@ describe('POST /api/games/new/:name', function() {
           done();
         });
     });
-    
   });
 
   it ('should respond with a 200 if the game exists', function (done) {
@@ -123,4 +123,5 @@ describe('POST /api/games/new/:name', function() {
         });
     });
   });
+
 });

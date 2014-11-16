@@ -38,35 +38,43 @@ exports.join = function(req, res) {
     if(err) { return handleError(res, err); }
     if (game.length == 0) { 
       var players = [];
-      var currUser = req.user.id;
+      var currUser = req.user;
 
-      User.find({}, '-salt -hashedPassword', function (err, users) {
+      User.find({
+        'email': { $in: req.body.players }
+      }, '-salt -hashedPassword', function (err, users) {
         if(err) return res.send(500, err);
 
         users.forEach(function (user) {
           var joined = false;
           
           if (currUser.id == user.id) {
+            console.log('joined!', user);
             joined = true;
           }
 
           players.push(
-            Player.create({
+            new Player({
               user: user.id,
               joined: joined
             })
-          );
+          );  
         });
 
-        Game.create({
+        // console.log(players);
+
+        new Game({
           name: req.params.name,
           active: false,
           players: players
-        });
+        }).save();
 
         return res.json(201, game);
       });
     } else {
+      // console.log(game[0].players[0]);
+      // console.log(game);
+
       return res.json(200, game);
     }
   });
