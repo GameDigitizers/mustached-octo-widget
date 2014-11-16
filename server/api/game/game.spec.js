@@ -71,7 +71,16 @@ describe('Game Model host function' ,function () {
     });
 
     Player.remove().exec().then(function () {
-      done();
+      User.create(
+          [nathan.model,
+          bert.model,
+          steve.model],
+
+          function() {
+            done();
+          }
+      );
+      
     });
   });
 
@@ -86,14 +95,10 @@ describe('Game Model host function' ,function () {
     game.host(nathan.model, [nathan.model.email, bert.model.email, steve.model.email], function (err) {
       should.not.exist(err);
 
-      // Player.find({
-      //   'user': { $in: [mongoose.Types.ObjectId(nathan.model.id), mongoose.Types.ObjectId(bert.model.id), mongoose.Types.ObjectId(steve.model.id)] }
-      // }, function (err, users) {
-      //   users.length.should.equal(3);
-      //   done();
-      // });
-      Player.find({}, function (err, players) {
-        players.length.should.equal(3);
+      Player.find({
+        'user': { $in: [new mongoose.Types.ObjectId(nathan.model.id), new mongoose.Types.ObjectId(bert.model.id), new mongoose.Types.ObjectId(steve.model.id)] }
+      }, function (err, users) {
+        users.length.should.equal(3);
         done();
       });
     });
