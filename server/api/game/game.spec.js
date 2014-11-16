@@ -6,6 +6,7 @@ var should = require('should'),
     mongoose = require('mongoose'),
     Game = mongoose.model('Game'),
     User = mongoose.model('User'),
+    Player = require('../player/player.model'),
     login = require('../../helpers/loginHelper.spec');
 
 var game;
@@ -62,6 +63,43 @@ describe('Game Model', function () {
   });
 });
 
+describe('Game Model host function' ,function () {
+  beforeEach(function (done) {
+    game = new Game({
+      name: 'septo-fluvial',
+      active: true,
+    });
+
+    Player.remove().exec().then(function () {
+      done();
+    });
+  });
+
+  it ('should err if host is not in user email list', function (done) {
+    game.host(nathan.model, [bert.model.email, steve.model.email], function (err) {
+      should.exist(err);
+      done();
+    });
+  });
+
+  it ('should save players to the database', function (done) {
+    game.host(nathan.model, [nathan.model.email, bert.model.email, steve.model.email], function (err) {
+      should.not.exist(err);
+
+      // Player.find({
+      //   'user': { $in: [mongoose.Types.ObjectId(nathan.model.id), mongoose.Types.ObjectId(bert.model.id), mongoose.Types.ObjectId(steve.model.id)] }
+      // }, function (err, users) {
+      //   users.length.should.equal(3);
+      //   done();
+      // });
+      Player.find({}, function (err, players) {
+        players.length.should.equal(3);
+        done();
+      });
+    });
+  });
+
+});
 
 describe('GET /api/games', function() {
 
@@ -82,8 +120,6 @@ describe('GET /api/games', function() {
 describe('POST /api/games/new/:name', function() {
 
   before(function (done) {
-    console.log("Removing all games");
-
     game = new Game({
       name: 'septo-fusilli',
       active: true,

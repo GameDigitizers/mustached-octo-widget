@@ -23,12 +23,13 @@ exports.show = function(req, res) {
 };
 
 // Creates a new game in the DB.
-exports.create = function(req, res) {
-  Game.create(req.body, function(err, game) {
-    if(err) { return handleError(res, err); }
-    return res.json(201, game);
-  });
-};
+// exports.create = function(req, res) {
+//   console.log("********************************HELP***********************************************");
+//   Game.create(req.body, function(err, game) {
+//     if(err) { return handleError(res, err); }
+//     return res.json(201, game);
+//   });
+// };
 
 // Creates a new game in the DB.
 exports.join = function(req, res) {
@@ -37,40 +38,21 @@ exports.join = function(req, res) {
   Game.find({'name': req.params.name}, function (err, game) {
     if(err) { return handleError(res, err); }
     if (game.length == 0) { 
-      var players = [];
-      var currUser = req.user;
-
-      User.find({
-        'email': { $in: req.body.players }
-      }, '-salt -hashedPassword', function (err, users) {
-        if(err) return res.send(500, err);
-
-        users.forEach(function (user) {
-          var joined = false;
-          
-          if (currUser.id == user.id) {
-            console.log('joined!', user);
-            joined = true;
-          }
-
-          players.push(
-            new Player({
-              user: user.id,
-              joined: joined
-            })
-          );  
-        });
-
-        // console.log(players);
-
-        new Game({
-          name: req.params.name,
-          active: false,
-          players: players
-        }).save();
-
-        return res.json(201, game);
+      var game = new Game({
+        name: req.params.name,
+        active: false
       });
+
+      game.host(req.user, req.body.players, function (err) {
+        if(err) { return handleError(res, err); }
+
+        game.save(function (err, game) {
+
+          if(err) { return handleError(res, err); }
+          return res.json(201, game);
+        });
+      });
+
     } else {
       // console.log(game[0].players[0]);
       // console.log(game);
