@@ -35,9 +35,9 @@ exports.show = function(req, res) {
 exports.join = function(req, res) {
   // console.log(req.user);
 
-  Game.find({'name': req.params.name}, function (err, game) {
+  Game.find({'name': req.params.name}, function (err, games) {
     if(err) { return handleError(res, err); }
-    if (game.length == 0) { 
+    if (games.length == 0) { 
       var game = new Game({
         name: req.params.name,
         active: false
@@ -47,17 +47,16 @@ exports.join = function(req, res) {
         if(err) { return handleError(res, err); }
 
         game.save(function (err, game) {
-
           if(err) { return handleError(res, err); }
           return res.json(201, game);
         });
       });
 
     } else {
-      // console.log(game[0].players[0]);
-      // console.log(game);
-
-      return res.json(200, game);
+      games[0].join(req.user, req.params.name, function(err) {
+        if(err) { return handleError(res, err); }
+        return res.json(200, game);
+      })
     }
   });
 };

@@ -17,7 +17,7 @@ var GameSchema = new Schema({
   active: Boolean,
   players: [{
     type: Schema.ObjectId,
-    ref: 'PlayerSchema'
+    ref: 'Player'
   }]
 });
 
@@ -53,6 +53,9 @@ GameSchema.methods = {
         cb();
       }.bind(this));
     }.bind(this));
+  }, 
+  join: function (currUser, gameName, cb) {
+    cb();
   }
 };
 

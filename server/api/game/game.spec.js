@@ -9,12 +9,21 @@ var should = require('should'),
     Player = require('../player/player.model'),
     login = require('../../helpers/loginHelper.spec');
 
+var io = require('socket.io-client');
+
+var socketURL = 'http://localhost:9000';
+
+var options ={
+  transports: ['websocket'],
+  'force new connection': true
+};
+
 var game;
 
 var nathan = new login.Agent(
   new User({
     provider: 'local',
-    name: 'Fake User',
+    name: 'Nathan',
     email: 'nathan@test.com',
     password: 'password'
   })
@@ -23,7 +32,7 @@ var nathan = new login.Agent(
 var bert = new login.Agent(
   new User({
     provider: 'local',
-    name: 'Fake User',
+    name: 'Bert',
     email: 'bert@test.com',
     password: 'password'
   })
@@ -32,7 +41,7 @@ var bert = new login.Agent(
 var steve = new login.Agent(
   new User({
     provider: 'local',
-    name: 'Fake User',
+    name: 'Steve',
     email: 'steve@test.com',
     password: 'password'
   })
@@ -85,6 +94,23 @@ describe('Game Model host function' ,function () {
   });
 
   it ('should err if host is not in user email list', function (done) {
+    var client1 = io.connect(socketURL, {path: '/socket.io-client'});
+
+    client1.on('connect', function(data) {
+      client1.emit('connection name', 'chatUser1');
+      console.log('?');
+
+      /* Since first client is connected, we connect
+      the second client. */
+      var client2 = io.connect(socketURL, {path: '/socket.io-client'});
+
+      client2.on('connect', function(data) {
+        client2.emit('connection name', 'chatUser2');
+        console.log('!');
+      });
+    });
+
+
     game.host(nathan.model, [bert.model.email, steve.model.email], function (err) {
       should.exist(err);
       done();
